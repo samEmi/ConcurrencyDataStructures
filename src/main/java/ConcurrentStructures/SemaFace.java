@@ -1,5 +1,6 @@
+package ConcurrentStructures;
 
-// In case I decide to write a different Semaphore implementation
+// In case I decide to write a different ConcurrentStructures.Semaphore implementation
 public interface SemaFace {
 
     void acquire() throws InterruptedException;
