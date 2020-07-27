@@ -66,12 +66,12 @@ public class Semaphore implements SemaFace {
     }
 
     public synchronized String toString(){
-        return this + "[Permits = " + permitsLeft + " ]";
+        return super.toString() + "[Permits = " + permitsLeft + " ]";
     }
 
     private void checkWait(int permits, Request request)throws InterruptedException{
         while (permitsLeft - permits < 0 && threadQueue.peek() == request){
-            wait();
+                wait();
         }
         threadQueue.poll();
         permitsLeft = permitsLeft - permits;
