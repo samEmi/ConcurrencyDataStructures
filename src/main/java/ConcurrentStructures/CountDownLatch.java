@@ -18,12 +18,16 @@ public class CountDownLatch {
     }
 
     public synchronized void countDown(){
-        if(count > 0){
+        if(count > 1){
             count--;
+        }
+        else if(count == 1){
+            count--;
+            notifyAll();
+            notified = true;
         }
         else{
             notifyAll();
-            notified = true;
         }
     }
 
