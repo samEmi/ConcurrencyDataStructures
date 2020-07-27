@@ -3,9 +3,8 @@ package ConcurrentStructures;
 import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
 
-public class ReentrantLock implements Lock, Serializable {
+public class ReentrantLock implements Serializable {
     private int count;
     private Thread owner;
     public ReentrantLock(){
@@ -20,11 +19,11 @@ public class ReentrantLock implements Lock, Serializable {
         }
     }
 
-    public void lockInterruptibly() throws InterruptedException {
+    public synchronized void lockInterruptibly() throws InterruptedException {
         lockHelper(false);
     }
 
-    public boolean tryLock() {
+    public synchronized boolean tryLock() {
         boolean result = false;
         try{
             result = lockHelper(true);
@@ -34,12 +33,12 @@ public class ReentrantLock implements Lock, Serializable {
         return result;
     }
 
-    public boolean tryLock(long time, TimeUnit unit) throws InterruptedException {
+    public synchronized boolean tryLock(long time, TimeUnit unit) throws InterruptedException {
         lockHelper(true);
         return false;
     }
 
-    public void unlock() {
+    public synchronized void unlock() {
         if(Thread.currentThread() == owner){
             count--;
             if(count == 0)owner = null;
@@ -50,9 +49,13 @@ public class ReentrantLock implements Lock, Serializable {
 
     }
 
-    public Condition newCondition() {
-        return null;
-    }
+    public synchronized int getHoldCount(){ return count; }
+
+    public synchronized boolean isHeldByCurrentThread(){return Thread.currentThread() == owner;}
+
+    public synchronized Thread getOwner(){return owner;}
+
+    public synchronized boolean isLocked(){return count != 0;}
 
     private boolean lockHelper(boolean trying)throws InterruptedException {
         while (owner != null) {
