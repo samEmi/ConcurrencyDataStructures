@@ -2,7 +2,7 @@ package ConcurrentStructures;
 
 import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Condition;
+
 
 public class ReentrantLock implements Serializable {
     private int count;
@@ -41,7 +41,10 @@ public class ReentrantLock implements Serializable {
     public synchronized void unlock() {
         if(Thread.currentThread() == owner){
             count--;
-            if(count == 0)owner = null;
+            if(count == 0){
+                owner = null;
+                notifyAll();
+            }
         }
         else{
             throw new IllegalMonitorStateException();
